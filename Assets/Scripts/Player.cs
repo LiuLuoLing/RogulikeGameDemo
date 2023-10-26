@@ -82,4 +82,10 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    private void TakeAttack(int damage)
+    {
+        GameManager.Instance.RemoveFood(damage);
+        animator.SetTrigger("Damage");
+    }
 }

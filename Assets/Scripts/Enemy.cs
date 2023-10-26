@@ -8,15 +8,28 @@ public class Enemy : MonoBehaviour
     private Vector2 targetPos;
     private Transform player;
     private Rigidbody2D rb;
+    private BoxCollider2D boxCollider;
+    private Animator animator;
 
     private float speed = 5;
+    public int damage = 10;
 
     void Start()
     {
         GameManager.Instance.enemys.Add(this);
         targetPos = transform.position;
         rb = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+       if(gameObject.name=="Enemy1(Clone)")
+        {
+            damage = 10;
+        }
+        else
+        {
+            damage = 20;
+        }
     }
 
     void Update()
@@ -30,6 +43,8 @@ public class Enemy : MonoBehaviour
         if (offset.magnitude < 1.1f)
         {
             //攻击
+            animator.SetTrigger("Attack");
+            player.SendMessage("TakeAttack", damage);
         }
         else
         {
@@ -58,7 +73,20 @@ public class Enemy : MonoBehaviour
                     x = -1;
                 }
             }
-            targetPos += new Vector2(x, y);
+
+            //检测前方物体
+            boxCollider.enabled = false;
+            RaycastHit2D hit2D = Physics2D.Linecast(targetPos, targetPos + new Vector2(x, y));
+            boxCollider.enabled = true;
+
+            if (hit2D.transform == null || hit2D.collider.tag == "Suda" || hit2D.collider.tag == "Food")
+            {
+                targetPos += new Vector2(x, y);
+            }
+            else
+            {
+
+            }
         }
     }
 }
