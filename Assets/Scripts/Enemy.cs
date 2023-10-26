@@ -79,7 +79,7 @@ public class Enemy : MonoBehaviour
             RaycastHit2D hit2D = Physics2D.Linecast(targetPos, targetPos + new Vector2(x, y));
             boxCollider.enabled = true;
 
-            if (hit2D.transform == null || hit2D.collider.tag == "Suda" || hit2D.collider.tag == "Food" || hit2D.collider.tag == "Enemy")
+            if (hit2D.transform == null || hit2D.collider.tag == "Suda" || hit2D.collider.tag == "Food")
             {
                 targetPos += new Vector2(x, y);
             }

@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     private float restTimer = 0;
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
-    private Vector2 targetPos = new Vector2(1, 1);
+    public Vector2 targetPos = new Vector2(1, 1);
     private Animator animator;
     private SpriteRenderer sprite;
 
@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         rb.MovePosition(Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime));
+
+        if(GameManager.Instance.food <= 0 || GameManager.Instance.isEnd)
+            return;
 
         restTimer += Time.deltaTime;
         if (restTimer < restTime)

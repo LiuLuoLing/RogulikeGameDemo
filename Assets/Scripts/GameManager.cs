@@ -8,12 +8,16 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
-    private int food = 10;
-    private bool sleepStep = true;
+    public int food = 10;
     public int level = 4;
+    public bool isEnd = false;
+    private bool sleepStep = true;
 
     public List<Enemy> enemys = new List<Enemy>();
     private Text foodText;
+    private Text overText;
+    private Player player;
+    private MapManager map;
 
     private void Awake()
     {
@@ -23,8 +27,21 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
+        //初始化地图
+        map = GetComponent<MapManager>();
+        map.InitMap();
+
+        //初始化UI
+        DontDestroyOnLoad(gameObject);
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         foodText = GameObject.Find("FoodText").GetComponent<Text>();
+        overText = GameObject.Find("OverText").GetComponent<Text>();
+        overText.gameObject.SetActive(false);
         UpdateFoodText(0);
+
+        //初始化参数
+        isEnd = false;
+        enemys.Clear();  
     }
 
     void UpdateFoodText(int foodChange)
@@ -58,6 +75,10 @@ public class GameManager : MonoBehaviour
     {
         food -= number;
         UpdateFoodText(-number);
+        if (food <= 0)
+        {
+            overText.gameObject.SetActive(true);
+        }
     }
 
     public void OnPlayeMove()
@@ -74,5 +95,18 @@ public class GameManager : MonoBehaviour
             }
             sleepStep = true;
         }
+
+        //判断是否到达出口
+        if (player.targetPos == map.exitPos)
+        {
+            isEnd = true;
+            Application.LoadLevel(Application.loadedLevel);
+        }
+    }
+
+    private void OnLevelWasLoaded(int Scenelevel)
+    {
+        level++;
+        InitGame();
     }
 }

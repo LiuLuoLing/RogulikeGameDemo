@@ -21,6 +21,7 @@ public class MapManager : MonoBehaviour
     private int clos;
     private int minCountWalk;
     private int maxCountWalk;
+    public Vector2 exitPos;
 
     private void Awake()
     {
@@ -49,11 +50,7 @@ public class MapManager : MonoBehaviour
         enemyArray.Add(Resources.Load("Prefabs/Enemy1") as GameObject);
         enemyArray.Add(Resources.Load("Prefabs/Enemy2") as GameObject);
         exitPrefab = Resources.Load("Prefabs/Exit") as GameObject;
-    }
-
-    void Start()
-    {
-        InitMap();
+        exitPos = new Vector2(clos - 2, rows - 2);
     }
 
     void Update()
@@ -61,7 +58,7 @@ public class MapManager : MonoBehaviour
 
     }
 
-    private void InitMap()
+    public void InitMap()
     {
         outWalk = new GameObject("OutWalks").transform;
         floor = new GameObject("Floors").transform;
@@ -110,7 +107,7 @@ public class MapManager : MonoBehaviour
         InstantiteItems(enemyCount, enemyArray, enemy);
 
         //创建出口
-        GameObject exit = GameObject.Instantiate(exitPrefab, new Vector2(clos - 2, rows - 2), Quaternion.identity);
+        GameObject exit = GameObject.Instantiate(exitPrefab, exitPos, Quaternion.identity);
     }
 
     //生成位置
