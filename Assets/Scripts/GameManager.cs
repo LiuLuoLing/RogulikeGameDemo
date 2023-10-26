@@ -1,20 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
+    public static GameManager Instance { get { return _instance; } }
+
     private int food = 10;
     private bool sleepStep = true;
-
-    public static GameManager Instance { get { return _instance; } }
     public int level = 4;
+
     public List<Enemy> enemys = new List<Enemy>();
+    private Text foodText;
 
     private void Awake()
     {
         _instance = this;
+        InitGame();
+    }
+
+    void InitGame()
+    {
+        foodText = GameObject.Find("FoodText").GetComponent<Text>();
+        UpdateFoodText(0);
+    }
+
+    void UpdateFoodText(int foodChange)
+    {
+        if (foodChange == 0)
+        {
+            foodText.text = "Food:" + food;
+        }
+        else
+        {
+            string str = foodChange > 0 ? "+" : "";
+            foodText.text = str + foodChange + "  Food:" + food;
+        }
     }
 
     /// <summary>
@@ -24,6 +47,7 @@ public class GameManager : MonoBehaviour
     public void AddFood(int number)
     {
         food += number;
+        UpdateFoodText(number);
     }
 
     /// <summary>
@@ -33,6 +57,7 @@ public class GameManager : MonoBehaviour
     public void RemoveFood(int number)
     {
         food -= number;
+        UpdateFoodText(-number);
     }
 
     public void OnPlayeMove()

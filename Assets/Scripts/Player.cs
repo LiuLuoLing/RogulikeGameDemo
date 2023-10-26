@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
 
         if (h != 0 || v != 0)
         {
+            GameManager.Instance.RemoveFood(1);
             //ÇÐ»»·½Ïò
             if (h < 0)
                 sprite.flipX = true;

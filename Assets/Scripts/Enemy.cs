@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-       if(gameObject.name=="Enemy1(Clone)")
+        if (gameObject.name == "Enemy1(Clone)")
         {
             damage = 10;
         }
@@ -79,7 +79,7 @@ public class Enemy : MonoBehaviour
             RaycastHit2D hit2D = Physics2D.Linecast(targetPos, targetPos + new Vector2(x, y));
             boxCollider.enabled = true;
 
-            if (hit2D.transform == null || hit2D.collider.tag == "Suda" || hit2D.collider.tag == "Food")
+            if (hit2D.transform == null || hit2D.collider.tag == "Suda" || hit2D.collider.tag == "Food" || hit2D.collider.tag == "Enemy")
             {
                 targetPos += new Vector2(x, y);
             }
