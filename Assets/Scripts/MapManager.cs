@@ -65,7 +65,7 @@ public class MapManager : MonoBehaviour
     {
         outWalk = new GameObject("OutWalks").transform;
         floor = new GameObject("Floors").transform;
-        walk = new GameObject("Walls").transform;
+        walk = new GameObject("Walks").transform;
         food = new GameObject("Foods").transform;
         enemy = new GameObject("Enemys").transform;
         //Χǽ�͵ذ�
