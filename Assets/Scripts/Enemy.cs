@@ -32,9 +32,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        rb.MovePosition(Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime));
+        rb.MovePosition(Vector2.MoveTowards(transform.position, targetPos, speed * Time.fixedDeltaTime));
     }
 
     public void Move()

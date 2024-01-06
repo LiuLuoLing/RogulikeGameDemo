@@ -22,14 +22,14 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        rb.MovePosition(Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime));
+        rb.MovePosition(Vector2.MoveTowards(transform.position, targetPos, speed * Time.fixedDeltaTime));
 
         if(GameManager.Instance.food <= 0 || GameManager.Instance.isEnd)
             return;
 
-        restTimer += Time.deltaTime;
+        restTimer += Time.fixedDeltaTime;
         if (restTimer < restTime)
             return;
 

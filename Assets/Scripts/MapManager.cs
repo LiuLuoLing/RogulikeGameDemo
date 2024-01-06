@@ -53,11 +53,6 @@ public class MapManager : MonoBehaviour
         exitPos = new Vector2(clos - 2, rows - 2);
     }
 
-    void Update()
-    {
-
-    }
-
     public void InitMap()
     {
         outWalk = new GameObject("OutWalks").transform;
