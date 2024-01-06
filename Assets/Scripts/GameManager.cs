@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
-    public int food = 10;
-    public int level = 4;
+    public int food = 12;
+    public int level = 1;
     public bool isEnd = false;
     private bool sleepStep = true;
 
@@ -18,6 +18,12 @@ public class GameManager : MonoBehaviour
     private Text overText;
     private Player player;
     private MapManager map;
+
+    private GameObject StartPanel;
+    private Image StartBG;
+    private Text startText;
+
+    public float duration = 5f; // 颜色过渡的持续时间
 
     private void Awake()
     {
@@ -39,9 +45,16 @@ public class GameManager : MonoBehaviour
         overText.gameObject.SetActive(false);
         UpdateFoodText(0);
 
+        StartPanel = GameObject.Find("StartPanel");
+        StartBG = StartPanel.GetComponent<Image>();
+        startText = StartPanel.GetComponentInChildren<Text>();
+        startText.text = level.ToString() + " Day";
+
         //初始化参数
         isEnd = false;
-        enemys.Clear();  
+        enemys.Clear();
+
+        StartCoroutine(StartPanelAnimator());
     }
 
     void UpdateFoodText(int foodChange)
@@ -108,5 +121,24 @@ public class GameManager : MonoBehaviour
     {
         level++;
         InitGame();
+    }
+
+    IEnumerator StartPanelAnimator()
+    {
+        float elapsedTime = 0f;
+        Color initialBGColor = StartBG.color;
+        Color initialTextColor = startText.color;
+        while (elapsedTime < duration)
+        {
+            StartBG.color = Color.Lerp(initialBGColor, Color.clear, elapsedTime / duration);
+            startText.color = Color.Lerp(initialTextColor, Color.clear, elapsedTime / duration);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // 确保最终颜色为完全透明
+        StartBG.color = Color.clear;
+        startText.color = Color.clear;
     }
 }
