@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -23,10 +24,13 @@ public class GameManager : MonoBehaviour
     private Image StartBG;
     private Text startText;
 
-    public float duration = 5f; // 颜色过渡的持续时间
+    private float duration = 4f; // 颜色过渡的持续时间
 
     private GameObject showInputUI;
     private bool isAndroid;
+
+    private Button restartBtn;
+    private Button ExitBtn;
 
     private void Awake()
     {
@@ -65,6 +69,16 @@ public class GameManager : MonoBehaviour
         isAndroid = player.Run();
 
         StartCoroutine(StartPanelAnimator());
+
+        restartBtn = overText.transform.Find("Restart").GetComponent<Button>();
+        ExitBtn = overText.transform.Find("Exit").GetComponent<Button>();
+
+        restartBtn.onClick.AddListener(Restart);
+
+        ExitBtn.onClick.AddListener(() =>
+        {
+            Application.Quit();
+        });
     }
 
     void UpdateFoodText(int foodChange)
@@ -100,6 +114,7 @@ public class GameManager : MonoBehaviour
         UpdateFoodText(-number);
         if (food <= 0)
         {
+            StartPanel.gameObject.SetActive(false);
             overText.gameObject.SetActive(true);
         }
     }
@@ -123,7 +138,8 @@ public class GameManager : MonoBehaviour
         if (player.targetPos == map.exitPos)
         {
             isEnd = true;
-            Application.LoadLevel(Application.loadedLevel);
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(currentSceneIndex);
         }
     }
 
@@ -153,5 +169,15 @@ public class GameManager : MonoBehaviour
 
         if (isAndroid)
             showInputUI.SetActive(true);
+    }
+
+    //重新开始游戏
+    void Restart()
+    {
+        food = 12;
+        level = 0;
+        isEnd = false;
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
     }
 }
