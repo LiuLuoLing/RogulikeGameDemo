@@ -13,6 +13,11 @@ public class Player : MonoBehaviour
     public Vector2 targetPos = new Vector2(1, 1);
     private Animator animator;
     private SpriteRenderer sprite;
+    private bool showButtonUI;
+
+    private bool isAndroid;
+    private float h;
+    private float v;
 
     void Start()
     {
@@ -20,21 +25,36 @@ public class Player : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+
+        isAndroid = Run();
     }
 
     void FixedUpdate()
     {
         rb.MovePosition(Vector2.MoveTowards(transform.position, targetPos, speed * Time.fixedDeltaTime));
 
-        if(GameManager.Instance.food <= 0 || GameManager.Instance.isEnd)
+        if (GameManager.Instance.food <= 0 || GameManager.Instance.isEnd)
             return;
 
         restTimer += Time.fixedDeltaTime;
         if (restTimer < restTime)
             return;
 
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        h = 0;
+        v = 0;
+
+        if (isAndroid)
+        {
+            //安卓平台
+            h = InputUI.Instance.SetH();
+            v = InputUI.Instance.SetV();
+        }
+        else
+        {
+            h = Input.GetAxisRaw("Horizontal");
+            v = Input.GetAxisRaw("Vertical");
+        }
+
         if (h > 0)
             v = 0;
 
@@ -92,4 +112,24 @@ public class Player : MonoBehaviour
         GameManager.Instance.RemoveFood(damage);
         animator.SetTrigger("Damage");
     }
+
+    //运行平台
+    public bool Run()
+    {
+        switch (Application.platform)
+        {
+            case RuntimePlatform.WindowsPlayer:
+                showButtonUI = false;
+                break;
+            case RuntimePlatform.WindowsEditor:
+                showButtonUI = false;
+                break;
+            case RuntimePlatform.Android:
+                showButtonUI = true;
+                break;
+        }
+        return showButtonUI;
+    }
+
+
 }

@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
 
     public float duration = 5f; // 颜色过渡的持续时间
 
+    private GameObject showInputUI;
+    private bool isAndroid;
+
     private void Awake()
     {
         _instance = this;
@@ -42,7 +45,8 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         foodText = GameObject.Find("FoodText").GetComponent<Text>();
         overText = GameObject.Find("OverText").GetComponent<Text>();
-        overText.gameObject.SetActive(false);
+        if (overText != null)
+            overText.gameObject.SetActive(false);
         UpdateFoodText(0);
 
         StartPanel = GameObject.Find("StartPanel");
@@ -53,6 +57,12 @@ public class GameManager : MonoBehaviour
         //初始化参数
         isEnd = false;
         enemys.Clear();
+
+        showInputUI = GameObject.Find("Input");
+        if (showInputUI != null)
+            showInputUI.SetActive(false);
+
+        isAndroid = player.Run();
 
         StartCoroutine(StartPanelAnimator());
     }
@@ -140,5 +150,8 @@ public class GameManager : MonoBehaviour
         // 确保最终颜色为完全透明
         StartBG.color = Color.clear;
         startText.color = Color.clear;
+
+        if (isAndroid)
+            showInputUI.SetActive(true);
     }
 }
