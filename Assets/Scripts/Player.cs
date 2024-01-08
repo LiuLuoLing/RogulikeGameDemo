@@ -75,7 +75,6 @@ public class Player : MonoBehaviour
             if (hit2D.transform == null)
             {
                 targetPos += new Vector2(h, v);
-
             }
             else
             {
@@ -93,7 +92,7 @@ public class Player : MonoBehaviour
                         Destroy(hit2D.transform.gameObject);
                         break;
                     case "Suda":
-                        GameManager.Instance.AddFood(20);
+                        GameManager.Instance.AddFood(15);
                         targetPos += new Vector2(h, v);
                         Destroy(hit2D.transform.gameObject);
                         break;
