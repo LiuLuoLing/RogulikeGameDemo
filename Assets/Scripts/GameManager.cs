@@ -20,17 +20,17 @@ public class GameManager : MonoBehaviour
     private Player player;
     private MapManager map;
 
-    private GameObject StartPanel;
-    private Image StartBG;
+    private GameObject startPanel;
+    private Image startBG;
     private Text startText;
 
     private float duration = 4f; // 颜色过渡的持续时间
 
-    private GameObject showInputUI;
+    private GameObject showInputPanel;
     private bool isAndroid;
 
     private Button restartBtn;
-    private Button ExitBtn;
+    private Button exitBtn;
 
     private void Awake()
     {
@@ -53,29 +53,36 @@ public class GameManager : MonoBehaviour
             overText.gameObject.SetActive(false);
         UpdateFoodText(0);
 
-        StartPanel = GameObject.Find("StartPanel");
-        StartBG = StartPanel.GetComponent<Image>();
-        startText = StartPanel.GetComponentInChildren<Text>();
+        startPanel = GameObject.Find("StartPanel");
+        startBG = startPanel.GetComponent<Image>();
+        startText = startPanel.GetComponentInChildren<Text>();
         startText.text = level.ToString() + " Day";
 
         //初始化参数
         isEnd = false;
         enemys.Clear();
 
-        showInputUI = GameObject.Find("Input");
-        if (showInputUI != null)
-            showInputUI.SetActive(false);
+        showInputPanel = GameObject.Find("Input");
+        if (showInputPanel != null)
+            showInputPanel.SetActive(false);
 
         isAndroid = player.Run();
 
         StartCoroutine(StartPanelAnimator());
 
         restartBtn = overText.transform.Find("Restart").GetComponent<Button>();
-        ExitBtn = overText.transform.Find("Exit").GetComponent<Button>();
+        exitBtn = overText.transform.Find("Exit").GetComponent<Button>();
 
+        Init();
+    }
+
+    void Init()
+    {
+        //重新开始游戏
         restartBtn.onClick.AddListener(Restart);
 
-        ExitBtn.onClick.AddListener(() =>
+        //退出游戏
+        exitBtn.onClick.AddListener(() =>
         {
             Application.Quit();
         });
@@ -114,7 +121,7 @@ public class GameManager : MonoBehaviour
         UpdateFoodText(-number);
         if (food <= 0)
         {
-            StartPanel.gameObject.SetActive(false);
+            startPanel.gameObject.SetActive(false);
             overText.gameObject.SetActive(true);
         }
     }
@@ -152,11 +159,11 @@ public class GameManager : MonoBehaviour
     IEnumerator StartPanelAnimator()
     {
         float elapsedTime = 0f;
-        Color initialBGColor = StartBG.color;
+        Color initialBGColor = startBG.color;
         Color initialTextColor = startText.color;
         while (elapsedTime < duration)
         {
-            StartBG.color = Color.Lerp(initialBGColor, Color.clear, elapsedTime / duration);
+            startBG.color = Color.Lerp(initialBGColor, Color.clear, elapsedTime / duration);
             startText.color = Color.Lerp(initialTextColor, Color.clear, elapsedTime / duration);
 
             elapsedTime += Time.deltaTime;
@@ -164,14 +171,16 @@ public class GameManager : MonoBehaviour
         }
 
         // 确保最终颜色为完全透明
-        StartBG.color = Color.clear;
+        startBG.color = Color.clear;
         startText.color = Color.clear;
 
         if (isAndroid)
-            showInputUI.SetActive(true);
+            showInputPanel.SetActive(true);
     }
 
-    //重新开始游戏
+    /// <summary>
+    /// 重新开始游戏
+    /// </summary>
     void Restart()
     {
         food = 12;
